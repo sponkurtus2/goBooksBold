@@ -5,10 +5,6 @@ import (
 	"embed"
 	"errors"
 	"fmt"
-	"github.com/jung-kurt/gofpdf"
-	"github.com/ledongthuc/pdf"
-	"golang.org/x/text/encoding/charmap"
-	"golang.org/x/text/transform"
 	"html/template"
 	"io"
 	"log"
@@ -17,13 +13,20 @@ import (
 	"strings"
 	"unicode"
 	"unicode/utf8"
+
+	"github.com/jung-kurt/gofpdf"
+	"github.com/ledongthuc/pdf"
+	"golang.org/x/text/encoding/charmap"
+	"golang.org/x/text/transform"
 )
 
 //go:embed template/index.html
 var content embed.FS
 
-var pdfContent strings.Builder
-var tpl = template.Must(template.ParseFiles("template/index.html"))
+var (
+	pdfContent strings.Builder
+	tpl        = template.Must(template.ParseFiles("template/index.html"))
+)
 
 func init() {
 	data, err := content.ReadFile("template/index.html")
@@ -213,8 +216,9 @@ func main() {
 
 	port := os.Getenv("PORT")
 	if port == "" {
-		port = "8080"
+		port = "10000"
 	}
+
 	log.Println("Server listening on http://localhost:" + port)
 	err := http.ListenAndServe(":"+port, nil)
 	if err != nil && !errors.Is(err, http.ErrServerClosed) {
